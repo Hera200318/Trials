@@ -1,0 +1,128 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Question</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ff4d4d; /* Red background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffcccc; /* Pink background */
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0.9rem 1.7rem rgba(0, 0, 0, 0.25),
+                        0 0.7rem 0.7rem rgba(0, 0, 0, 0.22);
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-bottom: 30px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        button {
+            width: 100px;
+            padding: 10px;
+            background-color: #ffffff;
+            color: #ff4d4d;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+        }
+
+        button:hover {
+            background-color: #ffe6e6;
+        }
+
+        .heart {
+            position: relative;
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            background-color: #ff4d4d;
+            transform: rotate(-45deg);
+            margin: 20px auto;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #ff4d4d;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -50px;
+            left: 0;
+        }
+
+        .heart::after {
+            left: 50px;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heart"></div>
+        <h1>Will you be my Valentine?</h1>
+        <div class="button-container">
+            <button id="yesButton">Yes</button>
+            <button id="noButton">No</button>
+        </div>
+    </div>
+
+    <script>
+        const noButton = document.getElementById('noButton');
+        const yesButton = document.getElementById('yesButton');
+        let clickCount = 0;
+
+        yesButton.addEventListener('click', function() {
+            window.location.href = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/76022c2a-95a1-4ec3-a9c1-777b83acbdf3/d8rnseq-adb14e85-74da-440b-ba19-e99ae7d152a9.jpg/v1/fit/w_720,h_1280,q_70,strp/your_mine_now_by_maddadog_d8rnseq-375w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTI4MCIsInBhdGgiOiJcL2ZcLzc2MDIyYzJhLTk1YTEtNGVjMy1hOWMxLTc3N2I4M2FjYmRmM1wvZDhybnNlcS1hZGIxNGU4NS03NGRhLTQ0MGItYmExOS1lOTlhZTdkMTUyYTkuanBnIiwid2lkdGgiOiI8PTcyMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.CFVs4kgnRWITY8Ke_lg7tXVE_Rk4XXG5lSEmCYnHoJw";
+        });
+
+        noButton.addEventListener('click', function() {
+            clickCount++;
+
+            const container = document.querySelector('.container');
+            const maxX = container.clientWidth - noButton.clientWidth;
+            const maxY = container.clientHeight - noButton.clientHeight;
+
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            noButton.style.position = 'absolute';
+            noButton.style.left = randomX + 'px';
+            noButton.style.top = randomY + 'px';
+
+            if (clickCount === 3) {
+                noButton.style.opacity = '0';
+                setTimeout(() => {
+                    noButton.style.opacity = '1';
+                }, 3000);
+                clickCount = 0; // Reset click count after vanishing
+            }
+        });
+    </script>
+</body>
+</html>
