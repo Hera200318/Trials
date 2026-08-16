@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Good Day TM! 🍕</title>
+  
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #ff5722;
+      --primary-dark: #e64a19;
+      --accent: #ffb300;
+      --text: #4e2a1e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Fredoka', cursive, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden !important;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #ffe0b2 0%, #ffcc80 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Floating Background Items */
+    .bg-pizza {
+      position: absolute;
+      font-size: 2.2rem;
+      opacity: 0.18;
+      animation: float 8s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(20deg); }
+    }
+
+    /* 3D Glass Container */
+    .card-container {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      border: 4px solid #ffffff;
+      border-radius: 36px;
+      padding: 30px 20px;
+      width: 88%;
+      max-width: 380px;
+      text-align: center;
+      box-shadow: 
+        0 20px 40px rgba(230, 74, 25, 0.18),
+        inset 0 -8px 0 rgba(0, 0, 0, 0.05),
+        inset 0 8px 0 rgba(255, 255, 255, 0.9);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Step System */
+    .step {
+      display: none;
+      animation: fadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .step.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.92); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Typography */
+    h1 {
+      color: var(--text);
+      font-size: 1.7rem;
+      font-weight: 700;
+      line-height: 1.3;
+      text-shadow: 2px 2px 0px rgba(255, 255, 255, 1);
+    }
+
+    /* 3D Buttons */
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .btn {
+      background: linear-gradient(145deg, #ff7043, var(--primary));
+      color: white;
+      border: none;
+      padding: 14px 22px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 20px;
+      cursor: pointer;
+      min-width: 100px;
+      box-shadow: 
+        0 6px 0 var(--primary-dark),
+        0 12px 15px rgba(0,0,0,0.15);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+      position: relative;
+      outline: none;
+      touch-action: manipulation;
+    }
+
+    .btn:active {
+      transform: translateY(4px);
+      box-shadow: 
+        0 2px 0 var(--primary-dark),
+        0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .btn-accent {
+      background: linear-gradient(145deg, #ffca28, var(--accent));
+      color: var(--text);
+      box-shadow: 
+        0 6px 0 #c79100,
+        0 12px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Strict Mobile-Boundary Positioning */
+    .btn-moving {
+      position: fixed !important;
+      z-index: 99999 !important;
+      margin: 0 !important;
+      transform: translate3d(0,0,0) !important;
+      transition: left 0.22s ease-out, top 0.22s ease-out, opacity 0.15s ease;
+    }
+
+    /* 3D Pizza Graphic */
+    .pizza-wrapper {
+      position: relative;
+      width: 170px;
+      height: 170px;
+      margin: 10px auto;
+      animation: floatPizza 3s infinite ease-in-out;
+    }
+
+    @keyframes floatPizza {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-12px) rotate(2deg); }
+    }
+
+    .pizza-3d-graphic {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 15px 20px rgba(216, 67, 21, 0.35));
+    }
+
+    .floating-heart {
+      position: absolute;
+      font-size: 1.3rem;
+      animation: heartFloat 2s infinite ease-in-out;
+    }
+
+    .heart1 { top: 0; left: 10px; animation-delay: 0s; }
+    .heart2 { top: 10px; right: 10px; animation-delay: 0.6s; }
+
+    @keyframes heartFloat {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.8; }
+      50% { transform: translateY(-10px) scale(1.2); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Elements -->
+  <div class="bg-pizza" style="top: 8%; left: 6%;">🍕</div>
+  <div class="bg-pizza" style="top: 15%; right: 8%;">🍕</div>
+  <div class="bg-pizza" style="bottom: 12%; left: 10%;">🍕</div>
+  <div class="bg-pizza" style="bottom: 18%; right: 6%;">🍕</div>
+
+  <div class="card-container">
+    
+    <!-- Step 1: Greeting -->
+    <div id="step1" class="step active">
+      <h1>Good Day TM☺️!</h1>
+      <div class="btn-group">
+        <button class="btn" onclick="nextStep(2)">Good Day Too</button>
+      </div>
+    </div>
+
+    <!-- Step 2: First Question -->
+    <div id="step2" class="step">
+      <h1>Are we having Free Pizza this week?🍕</h1>
+      <div class="btn-group">
+        <button class="btn" onclick="nextStep(3)">Yes</button>
+        <button id="noBtn" class="btn btn-accent" onclick="triggerRandomMove(this, event)" ontouchstart="triggerRandomMove(this, event)">No</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Second Question -->
+    <div id="step3" class="step">
+      <h1>Kailan po🥹?</h1>
+      <div class="btn-group">
+        <button class="btn" onclick="finishCelebration()">Monday ☺️</button>
+        <button id="notSureBtn" class="btn btn-accent" onclick="triggerVanishMove(this, event)" ontouchstart="triggerVanishMove(this, event)">Not sure</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Celebration Screen -->
+    <div id="step4" class="step">
+      <h1>Yay! See you on Monday! 🎉</h1>
+      
+      <!-- 3D Smiling Pizza Graphic -->
+      <div class="pizza-wrapper">
+        <div class="floating-heart heart1">💖</div>
+        <div class="floating-heart heart2">✨</div>
+        
+        <svg class="pizza-3d-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 30 50 Q 100 10 170 50 Q 180 65 170 75 L 115 175 Q 100 195 85 175 L 30 75 Q 20 65 30 50 Z" fill="#B16A28"/>
+          <path d="M 32 45 Q 100 8 168 45 Q 178 58 168 68 L 113 170 Q 100 188 87 170 L 32 68 Q 22 58 32 45 Z" fill="#E28D38"/>
+          <path d="M 40 55 Q 100 22 160 55 Q 166 65 158 75 L 110 160 Q 100 175 90 160 L 42 75 Q 34 65 40 55 Z" fill="#FFC107"/>
+          <path d="M 50 60 Q 55 80 60 62 Q 70 85 78 60 Q 95 90 105 60 Q 120 85 130 62 Q 140 80 148 58" fill="#FFD54F"/>
+          
+          <circle cx="70" cy="80" r="14" fill="#D32F2F"/>
+          <circle cx="67" cy="77" r="12" fill="#E53935"/>
+          <circle cx="65" cy="75" r="4" fill="#FF8A80" opacity="0.6"/>
+
+          <circle cx="130" cy="80" r="14" fill="#D32F2F"/>
+          <circle cx="127" cy="77" r="12" fill="#E53935"/>
+          <circle cx="125" cy="75" r="4" fill="#FF8A80" opacity="0.6"/>
+
+          <circle cx="100" cy="125" r="13" fill="#D32F2F"/>
+          <circle cx="98" cy="123" r="11" fill="#E53935"/>
+          <circle cx="96" cy="121" r="3.5" fill="#FF8A80" opacity="0.6"/>
+
+          <ellipse cx="80" cy="100" rx="6" ry="8" fill="#2C1810"/>
+          <circle cx="78" cy="98" r="2.5" fill="#FFFFFF"/>
+          
+          <ellipse cx="120" cy="100" rx="6" ry="8" fill="#2C1810"/>
+          <circle cx="118" cy="98" r="2.5" fill="#FFFFFF"/>
+
+          <ellipse cx="72" cy="107" rx="6" ry="4" fill="#FF8A80" opacity="0.8"/>
+          <ellipse cx="128" cy="107" rx="6" ry="4" fill="#FF8A80" opacity="0.8"/>
+
+          <path d="M 92 104 Q 100 116 108 104 Z" fill="#2C1810"/>
+          <path d="M 95 108 Q 100 115 105 108 Z" fill="#FF5252"/>
+        </svg>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function nextStep(stepNumber) {
+      document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+      document.getElementById('step' + stepNumber).classList.add('active');
+    }
+
+    // Phone-Screen Clamped Random Coordinate Generator
+    function getClampedCoordinates(btn) {
+      btn.classList.add('btn-moving');
+
+      // Get accurate button size
+      const btnWidth = btn.offsetWidth || 110;
+      const btnHeight = btn.offsetHeight || 48;
+
+      // Safe Padding Buffer (px) from physical phone screen edge
+      const safePadding = 20;
+
+      // Real visible phone screen dimensions
+      const viewportW = window.innerWidth || document.documentElement.clientWidth;
+      const viewportH = window.innerHeight || document.documentElement.clientHeight;
+
+      // Calculate max upper bounds ensuring entire button remains visible
+      const minX = safePadding;
+      const maxX = Math.max(minX, viewportW - btnWidth - safePadding);
+
+      const minY = safePadding;
+      const maxY = Math.max(minY, viewportH - btnHeight - safePadding);
+
+      // Pick random safe position
+      const randomX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
+      const randomY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
+
+      return { x: randomX, y: randomY };
+    }
+
+    // Unlimited Jump Handler for "No" Button
+    function triggerRandomMove(btn, e) {
+      if (e) e.preventDefault();
+      const pos = getClampedCoordinates(btn);
+      btn.style.left = pos.x + 'px';
+      btn.style.top = pos.y + 'px';
+    }
+
+    // Unlimited Vanish & Jump Handler for "Not sure" Button
+    function triggerVanishMove(btn, e) {
+      if (e) e.preventDefault();
+      btn.style.opacity = '0';
+
+      setTimeout(() => {
+        const pos = getClampedCoordinates(btn);
+        btn.style.left = pos.x + 'px';
+        btn.style.top = pos.y + 'px';
+        btn.style.opacity = '1';
+      }, 120);
+    }
+
+    // Pizza Confetti Burst on "Monday ☺️"
+    function finishCelebration() {
+      nextStep(4);
+      
+      if (typeof confetti === 'function') {
+        var pizzaShape = confetti.shapeFromText({ text: '🍕', scalar: 2 });
+        var cheeseShape = confetti.shapeFromText({ text: '🧀', scalar: 1.5 });
+
+        var duration = 3.5 * 1000;
+        var animationEnd = Date.now() + duration;
+
+        (function frame() {
+          confetti({
+            particleCount: 4,
+            angle: 60,
+            spread: 60,
+            origin: { x: 0 },
+            shapes: [pizzaShape, cheeseShape, 'circle'],
+            scalar: 2,
+            colors: ['#ff5722', '#ffb300', '#e64a19']
+          });
+          
+          confetti({
+            particleCount: 4,
+            angle: 120,
+            spread: 60,
+            origin: { x: 1 },
+            shapes: [pizzaShape, cheeseShape, 'circle'],
+            scalar: 2,
+            colors: ['#ff5722', '#ffb300', '#e64a19']
+          });
+
+          if (Date.now() < animationEnd) {
+            requestAnimationFrame(frame);
+          }
+        })();
+      }
+    }
+  </script>
+</body>
+</html>
